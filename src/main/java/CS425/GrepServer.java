@@ -1,7 +1,7 @@
 package CS425;
 
 
-public  class grepServer{
+public  class GrepServer{
 
 
     public static void main(String[] a){
