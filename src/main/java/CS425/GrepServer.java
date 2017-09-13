@@ -13,43 +13,22 @@ import java.io.IOException;
 */
 public class GrepServer {
 
-	private int serverId;
-
-	public GrepServer(int serverId, int port)
-		try{
+	public GrepServer(String serverAddress, String serverPort) {
+		try {
 			//create a server socket with binding port
-			ServerSocket serverSocket = new ServerSocket(port);
+			ServerSocket serverSocket = new ServerSocket(Integer.parseInt(serverPort));
 			Socket clientSocket = null;
-			System.out.println("The server is starting, please wait....")
+			System.out.println("The server with address" + serverAddress +" is starting, please wait....");
 			//keep listening to the client's connection
-			while(true){
+			while (true) {
 				clientSocket = serverSocket.accept();
-				ServerThread serverThread = new ServerThread(clientSocket);
+				GrepServerThread serverThread = new GrepServerThread(this,clientSocket);
 				serverThread.start();
-				InetAddress clientAddress = clientSocket.getInetAddress;
-				System.out.println("The server is connecting to client"+clientAddress);
+				InetAddress clientAddress = clientSocket.getInetAddress();
+				System.out.println("The server is connecting to client" + clientAddress);
 			}
-		}catch (IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-	// create server with serverId and port
-	public static void main(String[] args){
-		GrepServer grepServer = null;
-		int defaultServerId = 1;
-		int defaultPort = 1234;
-		if(args.length == 0)
-		{
-			System.out.println("Please enter the serverId and port!")
-		}else if(args.length == 2)
-		{
-     
-             	serverId = Integer.parseInt(args[0]);
-                port = Integer.parseInt(args[1]);
-        }else{
-        	serverId = defaultServerId;
-        	port = defaultPort;
-        }
-        GrepServer = new GrepServer(serverId, port);
 	}
 }
