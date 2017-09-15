@@ -27,11 +27,11 @@ public class GrepClient {
         //we assume that the position of the config files which records the information of servers is fixed
         Properties pr = new Properties();
 
-        FileInputStream  inpro = new FileInputStream("./config.properties");
+        //FileInputStream  inpro = new FileInputStream("./config.properties");
 
-        pr.load(inpro);
+        pr.load(GrepClient.class.getClassLoader().getResourceAsStream("config.properties"));
 
-        inpro.close();
+        //pr.load(inpro);
 
         String[] serverAddresses = pr.getProperty("serverAddress").split(",");
         String[] serverPorts = pr.getProperty("serverPorts").split(",");
@@ -50,6 +50,10 @@ public class GrepClient {
          * deal with the command.
          * command includes:  grep  -options  regexValues
          */
+        if (args.length < 2) {
+            System.out.println("You need to input the command: grep [-option] fileaddress");
+        }
+
         StringBuilder  command = new StringBuilder();
         for (int i = 0; i < args.length; i++) {
             command.append(args[i] + " ");

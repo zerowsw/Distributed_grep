@@ -37,7 +37,7 @@ public class GrepClientThread extends Thread {
 
         } catch (IOException e) {
 
-            System.err.println("Cannot connect to the server: "+ servers.getServerAddress());
+            System.err.println("Cannot connect to the server: " + servers.getServerAddress() + "  at port:" + servers.getServerPort());
             return;
         }
 
