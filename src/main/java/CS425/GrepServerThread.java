@@ -10,55 +10,56 @@ import java.net.Socket;
 */
 public class GrepServerThread extends Thread {
 
-	private GrepServer grepServer = null;
-	private Socket clientSocket = null;
+	private Socket socket = null;
 
-	public GrepServerThread(GrepServer grepServer, Socket clientSocket) {
-		this.grepServer = grepServer;
-		this.clientSocket = clientSocket;
+	public GrepServerThread(Socket socket) {
+		this.socket = socket;
 	}
 
+
 	public void run() {
-		ObjectInputStream inputFromClient = null;
-		OutputStream outputToClient = null;
+
 		BufferedReader breader = null;
-		InputStream in = null;
-		InputStreamReader isreader = null;
-		String command = null;
+		PrintWriter out = null;
+
+
 
 		try {
-			inputFromClient = new ObjectInputStream(clientSocket.getInputStream());
-			isreader = new InputStreamReader(inputFromClient);
-			//TODO
-			/** analyse the output from the client
-            */
-			Process pro = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", command});
+
+			ArgsToServer commandInfo = (ArgsToServer) new ObjectInputStream(socket.getInputStream()).readObject();
+			out = new PrintWriter(socket.getOutputStream(),true);
+
+
+			/**
+			 * analyse the output from the client
+             */
+			Process pro = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", commandInfo.getCommand()+" "+commandInfo.getFileAddress()});
 
 			// output the information to the client
-			in = pro.getInputStream();
-			breader = new BufferedReader(new InputStreamReader(in));
-			String info = breader.readLine();
-			clientSocket.shutdownInput();
-			outputToClient = clientSocket.getOutputStream();
+
+			breader = new BufferedReader(new InputStreamReader(pro.getInputStream()));
+
+			String info;
+
+			while((info = breader.readLine()) != null) {
+				out.println(info);
+			}
+
+
+			socket.shutdownInput();
+
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}finally {
 			try {
 
-				if (outputToClient != null) {
-					outputToClient.close();
+				if (out != null) {
+					out.close();
 				}
-				if (breader != null) {
-					breader.close();
-				}
-				if (isreader != null) {
-					isreader.close();
-				}
-				if (inputFromClient != null) {
-					inputFromClient.close();
-				}
-				if (clientSocket != null)
-					clientSocket.close();
+				if (socket != null)
+					socket.close();
 				}catch(IOException e){
 					e.printStackTrace();
 				}

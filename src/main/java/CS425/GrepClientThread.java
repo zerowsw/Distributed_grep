@@ -12,13 +12,13 @@ import java.net.Socket;
  */
 public class GrepClientThread extends Thread {
 
-    private Command command;
+    private ArgsToServer argsToServer;
     private ServerProperties servers;
 
 
-    public GrepClientThread(Command command, ServerProperties servers) {
+    public GrepClientThread(ArgsToServer argsToServer, ServerProperties servers) {
 
-        this.command = command;
+        this.argsToServer = argsToServer;
 
         this.servers = servers;
 
@@ -59,7 +59,7 @@ public class GrepClientThread extends Thread {
 
         try {
 
-            toServer.writeObject(command);
+            toServer.writeObject(argsToServer);
 
         } catch (IOException e) {
             e.printStackTrace();

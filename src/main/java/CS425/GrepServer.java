@@ -1,6 +1,8 @@
 package CS425;
 
 
+import com.sun.security.ntlm.Server;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net. InetAddress;
@@ -13,22 +15,35 @@ import java.io.IOException;
 */
 public class GrepServer {
 
-	public GrepServer(String serverAddress, String serverPort) {
+	public static void main(String[] args) {
+
+		if (args.length != 1) {
+			System.err.println("You need to input an port for the server");
+		}
+
+		int serverPort = Integer.parseInt(args[0]);
+		ServerSocket serverSocket = null;
+
 		try {
-			//create a server socket with binding port
-			ServerSocket serverSocket = new ServerSocket(Integer.parseInt(serverPort));
-			Socket clientSocket = null;
-			System.out.println("The server with address" + serverAddress +" is starting, please wait....");
-			//keep listening to the client's connection
-			while (true) {
-				clientSocket = serverSocket.accept();
-				GrepServerThread serverThread = new GrepServerThread(this,clientSocket);
-				serverThread.start();
-				InetAddress clientAddress = clientSocket.getInetAddress();
-				System.out.println("The server is connecting to client" + clientAddress);
-			}
+			serverSocket = new ServerSocket(serverPort);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		System.out.println("Server successfully started at port" + serverPort);
+
+		while(true) {
+
+			GrepServerThread serverThread = null;
+			try {
+				serverThread = new GrepServerThread(serverSocket.accept());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			serverThread.start();
+			System.out.println("The server successfully connected to the client");
+		}
+
+
 	}
 }

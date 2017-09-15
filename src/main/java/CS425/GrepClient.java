@@ -8,7 +8,7 @@ import java.util.Properties;
 
 /**
  * this is the entrance of the program
- * we will get the Command inpput here and use it to start the grepClinentThread
+ * we will get the ArgsToServer inpput here and use it to start the grepClinentThread
  */
 public class GrepClient {
 
@@ -40,30 +40,50 @@ public class GrepClient {
         //we assume that we provide the serverports and fileaddress for each servers
         ArrayList<ServerProperties> servers = new ArrayList<ServerProperties>();
 
-        for(int i = 0; i < serverAddresses.length; i++) {
+        for (int i = 0; i < serverAddresses.length; i++) {
 
             servers.add(new ServerProperties(serverAddresses[i], serverPorts[i], fileAddress[i]));
 
         }
 
         /*
+         * deal with the command.
+         * command includes:  grep  -options  regexValues
+         */
+        StringBuilder  command = new StringBuilder();
+        for (int i = 0; i < args.length; i++) {
+            command.append(args[i] + " ");
+        }
+
+
+        /*
          *according to the numbers of the server, we create some client threads to do the grep
          * and use the arraylist for future management
          */
-
         ArrayList<GrepClientThread>  clientThreads = new ArrayList<GrepClientThread>(servers.size());
 
+
         /*
-         * the Command class hasn't been implemented
+         * the ArgsToServer class hasn't been implemented
          */
-        Command command = new Command();
+        for (int i = 0; i < servers.size(); i++) {
 
-        for(int i = 0; i < servers.size(); i++) {
-
-            GrepClientThread grepThread = new GrepClientThread(command, servers.get(i));
+            ArgsToServer argsToServer = new ArgsToServer(command.toString(), servers.get(i).getFileAddress());
+            GrepClientThread grepThread = new GrepClientThread(argsToServer, servers.get(i));
             grepThread.start();
             clientThreads.add(grepThread);
 
+        }
+
+        /*
+         * ensure the main thread wait for all the query thread terminates
+         */
+        for (GrepClientThread gct : clientThreads) {
+            try {
+                gct.join();
+            } catch (InterruptedException e) {
+                System.err.println("The main thread is interrupted.");
+            }
         }
 
 
