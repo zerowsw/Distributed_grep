@@ -1,9 +1,12 @@
 package CS425;
 
+import java.io.Serializable;
+
 /**
  * we use this class to encapsulate the command and file address
  */
-public class ArgsToServer {
+public class ArgsToServer implements Serializable {
+
 
     private String command;
     private String fileAddress;

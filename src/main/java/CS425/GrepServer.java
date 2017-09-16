@@ -33,6 +33,7 @@ public class GrepServer {
 
 			GrepServerThread serverThread = null;
 			try {
+				System.out.println("Waiting for connection");
 				serverThread = new GrepServerThread(serverSocket.accept());
 			} catch (IOException e) {
 				e.printStackTrace();

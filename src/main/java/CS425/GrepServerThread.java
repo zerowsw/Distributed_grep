@@ -13,6 +13,7 @@ public class GrepServerThread extends Thread {
 	private Socket socket = null;
 
 	public GrepServerThread(Socket socket) {
+
 		this.socket = socket;
 	}
 
@@ -21,6 +22,7 @@ public class GrepServerThread extends Thread {
 
 		BufferedReader breader = null;
 		PrintWriter out = null;
+
 
 
 
@@ -54,7 +56,6 @@ public class GrepServerThread extends Thread {
 			e.printStackTrace();
 		}finally {
 			try {
-
 				if (out != null) {
 					out.close();
 				}
