@@ -12,26 +12,35 @@ import java.util.Properties;
  */
 public class GrepClient {
 
+    private String configFile;
+
+    public GrepClient(String configFile) {
+        this.configFile = configFile;
+    }
+
     public static void main(String[] args) {
 
         try {
-            start(args);
+           new GrepClient("config.properties").start(args);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    //start the client
-    private static void start(String[] args) throws IOException {
+    /**
+     * client start function
+     * @param args from user input
+     * @throws IOException
+     */
+    public void start(String[] args) throws IOException {
 
         //we assume that the position of the config files which records the information of servers is fixed
         Properties pr = new Properties();
 
         //FileInputStream  inpro = new FileInputStream("./config.properties");
 
-        pr.load(GrepClient.class.getClassLoader().getResourceAsStream("config.properties"));
+        pr.load(GrepClient.class.getClassLoader().getResourceAsStream(configFile));
 
-        //pr.load(inpro);
 
         String[] serverAddresses = pr.getProperty("serverAddress").split(",");
         String[] serverPorts = pr.getProperty("serverPorts").split(",");
@@ -41,15 +50,10 @@ public class GrepClient {
         ArrayList<ServerProperties> servers = new ArrayList<ServerProperties>();
 
         for (int i = 0; i < serverAddresses.length; i++) {
-
             servers.add(new ServerProperties(serverAddresses[i], serverPorts[i], fileAddress[i]));
-
         }
 
-        /*
-         * deal with the command.
-         * command includes:  grep  -options  regexValues
-         */
+        //deal with the command: grep  -options  regexValues
         if (args.length < 2) {
             System.out.println("You need to input the command: grep [-option] fileaddress");
         }
@@ -59,26 +63,25 @@ public class GrepClient {
             command.append(args[i] + " ");
         }
 
+        doGrep(servers, command);
 
-        /*
-         *according to the numbers of the server, we create some client threads to do the grep
-         * and use the arraylist for future management
-         */
+    }
+
+    /**
+     * start the client thread to do distributed grep
+     * @param servers basic information of server
+     * @param command grep command
+     */
+    private void doGrep(ArrayList<ServerProperties> servers, StringBuilder command) {
         ArrayList<GrepClientThread>  clientThreads = new ArrayList<GrepClientThread>(servers.size());
 
 
-        /*
-         * the ArgsToServer class hasn't been implemented
-         */
         for (int i = 0; i < servers.size(); i++) {
-
             ArgsToServer argsToServer = new ArgsToServer(command.toString(), servers.get(i).getFileAddress());
             GrepClientThread grepThread = new GrepClientThread(argsToServer, servers.get(i));
             grepThread.start();
             clientThreads.add(grepThread);
-
         }
-
         /*
          * ensure the main thread wait for all the query thread terminates
          */
@@ -89,9 +92,6 @@ public class GrepClient {
                 System.err.println("The main thread is interrupted.");
             }
         }
-
-
-
     }
 
 

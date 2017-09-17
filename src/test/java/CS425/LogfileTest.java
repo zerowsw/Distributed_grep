@@ -24,7 +24,7 @@ public class LogfileTest {
             FileWriter fw = new FileWriter(file, true);
             BufferedWriter bw = new BufferedWriter(fw);
             SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String str = "abcdefghijklmnopqrstuvwxyz0123456789";
+            String str = "abcdefghijklmnopqrstuvwxyz*& //'=.0123456789";
             Random random = new Random();
             StringBuffer buf1 = new StringBuffer();
             StringBuffer buf2 = new StringBuffer();
@@ -70,7 +70,7 @@ public class LogfileTest {
     public static void main(String[] args) {
 
         try {
-            logfileGenerator(5, 30);
+            logfileGenerator(6, 100000);
         } catch (IOException e) {
             e.printStackTrace();
         }

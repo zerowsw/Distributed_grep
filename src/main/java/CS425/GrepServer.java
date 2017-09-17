@@ -29,6 +29,15 @@ public class GrepServer {
 
 		System.out.println("Server successfully started at port" + serverPort);
 
+		listenToClient(serverSocket);
+
+	}
+
+	/**
+	 * waiting for connection request from clients
+	 * @param serverSocket
+	 */
+	private static void listenToClient(ServerSocket serverSocket) {
 		while(true) {
 
 			GrepServerThread serverThread = null;
@@ -41,7 +50,5 @@ public class GrepServer {
 			serverThread.start();
 			System.out.println("The server successfully connected to the client");
 		}
-
-
 	}
 }

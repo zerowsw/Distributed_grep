@@ -20,21 +20,15 @@ public class GrepServerThread extends Thread {
 
 	public void run() {
 
-		BufferedReader breader = null;
+		BufferedReader breader;
 		PrintWriter out = null;
-
-
-
 
 		try {
 
 			ArgsToServer commandInfo = (ArgsToServer) new ObjectInputStream(socket.getInputStream()).readObject();
 			out = new PrintWriter(socket.getOutputStream(),true);
 
-
-			/**
-			 * analyse the output from the client
-             */
+			//analyse the output from the client
 			Process pro = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", commandInfo.getCommand()+" "+commandInfo.getFileAddress()});
 
 			// output the information to the client
