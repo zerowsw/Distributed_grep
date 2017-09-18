@@ -1,25 +1,30 @@
 Instructions:
 -----------------------------------------------------
 Preparations
-1. Open src/main/resources/config.properties. Set server addresses, port numbers and file pathes that you want to do grep.
-2. We save grep results in local files everty time after greping. You may change the file path as you like.
-3. Our project is built through maven. If you hava installed maven in your computer, you can easily package our project into executable jar files--client.jar 
-or server.jar through setting different main classes.
+1.  Open src/main/resources/config.properties. Set server addresses, port numbers and file 
+    pathes that you want to do grep.
+2.  We save grep results in local files everty time after greping. You may change the file 
+    path as you like.
+3.  Our project is built through maven. If you hava installed maven in your computer, you 
+    can easily package our project into executable jar files--client.jar or server.jar 
+    through setting different main classes.
 -----------------------------------------------------
 Run the server
-1. Scp the server.jar into the servers that you want to use.
-2. cd into the folder where you put the server.jar.
-3. run the command: java -jar server.jar 8088. (Here, 8080 is the server port which should be consistent with the port number you set into config.properties)
+1.  Scp the server.jar into the servers that you want to use.
+2.  cd into the folder where you put the server.jar.
+3.  run the command: java -jar server.jar 8088. (Here, 8080 is the server port which should
+    be consistent with the port number you set into config.properties)
 -----------------------------------------------------
 Run the client
-1. cd into the folder of client.jar.
-2. do distributed grep by the command: jave -jar client.jar grep [-option] regexps. (The second half of the command can be any legal grep command except for
-the file address)
+1.  cd into the folder of client.jar.
+2.  do distributed grep by the command: jave -jar client.jar grep [-option] regexps. (The 
+    second half of the command can be any legal grep command except for the file address)
 -------------------------------------------------------
 UnitTest
-1. You can run the function LogfileTest to generate some log files if you like.
-2. We have gengerate some log files in local and save the results of different grep commands in local files named unit-test-outcome1.log, ..., unit-test-outcome4.log.
-3. You need to manually scp the log files -UnitTest2.log,..,UnitTest6.log to servers.
-4. Then you can run GrepUnitTest to do the unittest.
+1.  You can run the function LogfileTest to generate some log files if you like.
+2.  We have gengerate some log files in local and save the results of different grep commands 
+    in local files named unit-test-outcome1.log, ..., unit-test-outcome4.log.
+3.  You need to manually scp the log files -UnitTest2.log,..,UnitTest6.log to servers.
+4.  Then you can run GrepUnitTest to do the unittest.
 
 
