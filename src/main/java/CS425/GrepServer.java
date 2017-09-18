@@ -26,9 +26,7 @@ public class GrepServer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		System.out.println("Server successfully started at port" + serverPort);
-
 		listenToClient(serverSocket);
 
 	}
@@ -39,7 +37,6 @@ public class GrepServer {
 	 */
 	private static void listenToClient(ServerSocket serverSocket) {
 		while(true) {
-
 			GrepServerThread serverThread = null;
 			try {
 				System.out.println("Waiting for connection");

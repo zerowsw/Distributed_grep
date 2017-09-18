@@ -19,9 +19,12 @@ public class GrepUnitTest {
     public static void main(String[] args) {
         //we test some different patterns.
         GrepUnitTest test = new GrepUnitTest();
-        test.testNormalPattern();
+
         test.testRegex();
         test.testServerFailure();
+        System.out.println("normal pattern test :" +  test.testNormalPattern() + "\n"
+                              + "regex test :" + test.testRegex() + "\n"
+                              + "server failure :" + test.testServerFailure() + "\n");
     }
 
     /**
@@ -37,7 +40,28 @@ public class GrepUnitTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         //read the query outcomes from local file
+        List<String> lines = getDistributedQueries();
+
+        List<String> expectLines = new ArrayList<String>();
+        try {
+            Scanner sc = new Scanner(new FileReader("unit-test-outcome1.log"));
+            sc.useDelimiter("\n");
+            while (sc.hasNext()) {
+                expectLines.add(sc.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return lines.toString().equals(expectLines.toString());
+    }
+
+    /**
+     * get the distributed queries from local files.
+     * @return queries
+     */
+    private List<String> getDistributedQueries() {
         List<String> lines = new ArrayList<String>();
         try {
             Scanner sr;
@@ -52,18 +76,7 @@ public class GrepUnitTest {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-        List<String> expectLines = new ArrayList<String>();
-        try {
-            Scanner sc = new Scanner(new FileReader("unit-test-outcome1.log"));
-            sc.useDelimiter("\n");
-            while (sc.hasNext()) {
-                expectLines.add(sc.nextLine());
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return lines.toString().equals(expectLines.toString());
+        return lines;
     }
 
 
@@ -81,20 +94,7 @@ public class GrepUnitTest {
         }
 
         //read the query outcomes from local file
-        List<String> lines = new ArrayList<String>();
-        try {
-            Scanner sr;
-            for (int i = 2; i < 7; i++) {
-                sr = new Scanner(new FileReader("/home/shaowen2/testdata/vm0" + i + "-output.log"));
-                sr.useDelimiter("\n");
-                while (sr.hasNext()) {
-                    lines.add(sr.nextLine());
-                }
-                sr.close();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        List<String> lines = getDistributedQueries();
 
         List<String> expectLines = new ArrayList<String>();
         try {
@@ -127,24 +127,39 @@ public class GrepUnitTest {
         }
 
         //read the query outcomes from local file
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = getDistributedQueries();
+
+        List<String> expectLines = new ArrayList<String>();
         try {
-            Scanner sr;
-            for (int i = 2; i < 7; i++) {
-                sr = new Scanner(new FileReader("/home/shaowen2/testdata/vm0" + i + "-output.log"));
-                sr.useDelimiter("\n");
-                while (sr.hasNext()) {
-                    lines.add(sr.nextLine());
-                }
-                sr.close();
+            Scanner sc = new Scanner(new FileReader("unit-test-outcome3.log"));
+            sc.useDelimiter("\n");
+            while (sc.hasNext()) {
+                expectLines.add(sc.nextLine());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        return lines.toString().equals(expectLines.toString());
+    }
+
+    /**
+     * test infrequent pattern
+     * @return
+     */
+    private boolean testInfrequent() {
+        String[] infrequent = {"grep", "-n", "*abc"};
+
+        try {
+            new GrepClient("unitTest.properties").start(infrequent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<String> lines = getDistributedQueries();
 
         List<String> expectLines = new ArrayList<String>();
         try {
-            Scanner sc = new Scanner(new FileReader("unit-test-outcome2.log"));
+            Scanner sc = new Scanner(new FileReader("unit-test-outcome4.log"));
             sc.useDelimiter("\n");
             while (sc.hasNext()) {
                 expectLines.add(sc.nextLine());

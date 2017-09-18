@@ -30,7 +30,6 @@ public class GrepClientThread extends Thread {
         Socket socket;
         try {
             socket = new Socket(servers.getServerAddress(),Integer.parseInt(servers.getServerPort()));
-            socket.setSoTimeout(3000);
         } catch (IOException e) {
            // e.printStackTrace();
             System.err.println("Cannot connect to the server: " + servers.getServerAddress()
@@ -73,7 +72,7 @@ public class GrepClientThread extends Thread {
                 pr.println(line);
             }
             pr.flush();
-            System.out.println("query count: " + count);
+            System.out.println(servers.getServerAddress()+ "  query count:  " + count);
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
