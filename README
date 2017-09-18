@@ -1,0 +1,6 @@
+Instructions:
+-----------------------------------------------------
+Preparations
+1. Open src/main/resources/config.properties. Set server addresses, port numbers and file pathes that you want to do grep.
+2. We save the grep results in local files everty time after the grep. You can change the file path as you like.
+3. Our project is built through maven. If you hava 
